@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app
+        xmlns = "https://jakarta.ee/xml/ns/jakartaee"
+        xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation = "https://jakarta.ee/xml/ns/jakartaee
+        https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+        version = "6.0"
+        metadata-complete = "false">
+    <display-name>Голосование</display-name>
+<servlet>
+    <servlet-name>VotingServlet</servlet-name>
+    <servlet-class>by.it_academy.jd2.controller.servlet.VotingServlet</servlet-class>
+</servlet>
+    <servlet-mapping>
+        <servlet-name>VotingServlet</servlet-name>
+        <url-pattern>/voting</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ResultServlet</servlet-name>
+        <servlet-class>by.it_academy.jd2.controller.servlet.ResultServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ResultServlet</servlet-name>
+        <url-pattern>/results</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CreateVotingServlet</servlet-name>
+        <servlet-class>by.it_academy.jd2.controller.servlet.CreateVotingServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CreateVotingServlet</servlet-name>
+        <url-pattern>/create</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>EditFormServlet</servlet-name>
+        <servlet-class>by.it_academy.jd2.controller.servlet.EditFormServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>EditFormServlet</servlet-name>
+        <url-pattern>/edit</url-pattern>
+    </servlet-mapping>
+
+
+    <filter>
+        <filter-name>EncodingFilter</filter-name>
+        <filter-class>by.it_academy.jd2.controller.filter.EncodingFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>EncodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+
+</web-app>
