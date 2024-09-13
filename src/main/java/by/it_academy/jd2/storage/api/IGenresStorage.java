@@ -14,4 +14,6 @@ public interface IGenresStorage {
 
     Map<Long, String> get();
 
+    String delete(Long id);
+
 }

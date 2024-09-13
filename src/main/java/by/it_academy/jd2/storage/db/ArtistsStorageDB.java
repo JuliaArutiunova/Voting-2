@@ -119,6 +119,7 @@ public class ArtistsStorageDB implements IArtistsStorage {
              PreparedStatement statement2 = connect.prepareStatement(DELETE_ARTIST)) {
 
             statement1.setLong(1, id);
+            statement1.executeUpdate();
             statement2.setLong(1,id);
 
             try (ResultSet resultSet = statement2.executeQuery()) {

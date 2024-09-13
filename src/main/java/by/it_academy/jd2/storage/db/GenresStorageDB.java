@@ -22,6 +22,10 @@ public class GenresStorageDB implements IGenresStorage {
     private static final String SELECT_ALL_QUERY = """
             SELECT id, name FROM app.genre""";
 
+    private static final String DELETE_GENRE_FROM_VOTE = "DELETE FROM app.cross_vote_genre WHERE genre_id = ?;";
+
+    private static final String DELETE_GENRE = "DELETE FROM app.genre WHERE id = ? RETURNING name;";
+
     public GenresStorageDB() {
     }
 
@@ -101,6 +105,30 @@ public class GenresStorageDB implements IGenresStorage {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public String delete(Long id) {
+        try (Connection connect = DBUtils.getConnection();
+             PreparedStatement statement1 = connect.prepareStatement(DELETE_GENRE_FROM_VOTE);
+             PreparedStatement statement2 = connect.prepareStatement(DELETE_GENRE)) {
+
+            statement1.setLong(1, id);
+            statement1.executeUpdate();
+            statement2.setLong(1,id);
+
+            try (ResultSet resultSet = statement2.executeQuery()) {
+                while (resultSet.next()) {
+                    return resultSet.getString("name");
+                }
+            }
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return null;
     }
 
 }

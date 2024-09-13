@@ -13,4 +13,6 @@ public interface IFormManagerService {
     ParticipantsDTO getParticipants();
 
     String deleteArtist(String id);
+
+    String deleteGenre(String id);
 }

@@ -63,6 +63,13 @@ public class FormManagerService implements IFormManagerService {
         return artistsStorageDB.delete(Long.parseLong(id));
     }
 
+    public String deleteGenre(String id){
+        if (id.isBlank()) {
+            throw new IllegalArgumentException("Жанр не был выбран");
+        }
+        return genresStorageDB.delete(Long.parseLong(id));
+    }
+
     public ParticipantsDTO getParticipants() {
         return ParticipantsDTO.builder()
                 .setArtists(artistsStorageDB.get())
