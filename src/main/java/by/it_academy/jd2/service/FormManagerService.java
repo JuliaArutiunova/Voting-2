@@ -8,8 +8,9 @@ import by.it_academy.jd2.storage.api.IGenresStorage;
 
 public class FormManagerService implements IFormManagerService {
 
-    IArtistsStorage artistsStorageDB;
-    IGenresStorage genresStorageDB;
+    private IArtistsStorage artistsStorageDB;
+    private IGenresStorage genresStorageDB;
+
 
     public FormManagerService(IArtistsStorage artistsStorageDB, IGenresStorage genresStorageDB) {
         this.artistsStorageDB = artistsStorageDB;
@@ -27,12 +28,38 @@ public class FormManagerService implements IFormManagerService {
     }
 
 
+    @Override
+    public void createArtist(String name){
+
+        if(name.isBlank()){
+            throw new IllegalArgumentException("Имя  артиста не введено");
+        }
+        if (artistsStorageDB.get().containsValue(name)) {
+            throw new IllegalArgumentException("Артист с таким именем уже существует");
+        }
+
+        artistsStorageDB.create(name);
+
+    }
+
+    @Override
+    public void createGenre(String name) {
+
+        if(name.isBlank()){
+            throw new IllegalArgumentException("Имя жанра не введено");
+        }
+        if (genresStorageDB.get().containsValue(name)) {
+            throw new IllegalArgumentException("Жанр с таким названием уже существует");
+        }
+
+        genresStorageDB.create(name);
+    }
+
     public ParticipantsDTO getParticipants() {
         return ParticipantsDTO.builder()
                 .setArtists(artistsStorageDB.get())
                 .setGenres(genresStorageDB.get())
                 .build();
     }
-
 
 }

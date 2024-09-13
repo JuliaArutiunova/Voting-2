@@ -13,7 +13,5 @@ public interface IArtistsStorage {
 
     Map<Long, String> get();
 
-    public String get(Long id);
-
-
+    String get(Long id);
 }

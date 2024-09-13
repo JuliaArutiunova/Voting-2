@@ -22,6 +22,7 @@ public class ArtistsStorageDB implements IArtistsStorage {
 
     private static final String SELECT_ALL_QUERY = """
             SELECT id, name FROM app.artist""";
+
     public ArtistsStorageDB() {
     }
 
@@ -74,10 +75,10 @@ public class ArtistsStorageDB implements IArtistsStorage {
     public Map<Long, String> get() {
         try (Connection connect = DBUtils.getConnection();
              Statement statement = connect.createStatement();
-             ResultSet resultSet = statement.executeQuery(SELECT_ALL_QUERY)){
+             ResultSet resultSet = statement.executeQuery(SELECT_ALL_QUERY)) {
             Map<Long, String> result = new HashMap<>();
-            while (resultSet.next()){
-                result.put(resultSet.getLong("id"),resultSet.getString("name"));
+            while (resultSet.next()) {
+                result.put(resultSet.getLong("id"), resultSet.getString("name"));
             }
             return result;
         } catch (SQLException e) {
@@ -89,7 +90,7 @@ public class ArtistsStorageDB implements IArtistsStorage {
     public String get(Long id) {
 
         try (Connection connect = DBUtils.getConnection();
-             PreparedStatement statement = connect.prepareStatement(SELECT_BY_ID_QUERY);){
+             PreparedStatement statement = connect.prepareStatement(SELECT_BY_ID_QUERY);) {
 
             statement.setLong(1, id);
             try (ResultSet resultSet = statement.executeQuery()) {

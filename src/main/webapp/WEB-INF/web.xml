@@ -35,12 +35,21 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>EditFormServlet</servlet-name>
-        <servlet-class>by.it_academy.jd2.controller.servlet.EditFormServlet</servlet-class>
+        <servlet-name>AddArtistServlet</servlet-name>
+        <servlet-class>by.it_academy.jd2.controller.servlet.AddArtistServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>EditFormServlet</servlet-name>
-        <url-pattern>/edit</url-pattern>
+        <servlet-name>AddArtistServlet</servlet-name>
+        <url-pattern>/addArtist</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AddGenreServlet</servlet-name>
+        <servlet-class>by.it_academy.jd2.controller.servlet.AddGenreServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AddGenreServlet</servlet-name>
+        <url-pattern>/addGenre</url-pattern>
     </servlet-mapping>
 
 

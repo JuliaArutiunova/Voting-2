@@ -92,16 +92,15 @@ public class GenresStorageDB implements IGenresStorage {
     public Map<Long, String> get() {
         try (Connection connect = DBUtils.getConnection();
              Statement statement = connect.createStatement();
-             ResultSet resultSet = statement.executeQuery(SELECT_ALL_QUERY)){
+             ResultSet resultSet = statement.executeQuery(SELECT_ALL_QUERY)) {
             Map<Long, String> result = new HashMap<>();
-            while (resultSet.next()){
-                result.put(resultSet.getLong("id"),resultSet.getString("name"));
+            while (resultSet.next()) {
+                result.put(resultSet.getLong("id"), resultSet.getString("name"));
             }
             return result;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
-
 
 }
