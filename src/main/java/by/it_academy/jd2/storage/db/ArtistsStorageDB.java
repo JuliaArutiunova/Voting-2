@@ -23,6 +23,13 @@ public class ArtistsStorageDB implements IArtistsStorage {
     private static final String SELECT_ALL_QUERY = """
             SELECT id, name FROM app.artist""";
 
+    private static final String DELETE_ARTIST_FROM_VOTE = """
+            UPDATE app.vote SET artist_id = null WHERE artist_id = ?;
+            """;
+    private static final String DELETE_ARTIST = """
+            DELETE FROM app.artist WHERE id = ? RETURNING name;
+            """;
+
     public ArtistsStorageDB() {
     }
 
@@ -90,7 +97,7 @@ public class ArtistsStorageDB implements IArtistsStorage {
     public String get(Long id) {
 
         try (Connection connect = DBUtils.getConnection();
-             PreparedStatement statement = connect.prepareStatement(SELECT_BY_ID_QUERY);) {
+             PreparedStatement statement = connect.prepareStatement(SELECT_BY_ID_QUERY)) {
 
             statement.setLong(1, id);
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -98,6 +105,29 @@ public class ArtistsStorageDB implements IArtistsStorage {
                     return resultSet.getString("name");
                 }
             }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return null;
+    }
+
+    @Override
+    public String delete(Long id) {
+        try (Connection connect = DBUtils.getConnection();
+             PreparedStatement statement1 = connect.prepareStatement(DELETE_ARTIST_FROM_VOTE);
+             PreparedStatement statement2 = connect.prepareStatement(DELETE_ARTIST)) {
+
+            statement1.setLong(1, id);
+            statement2.setLong(1,id);
+
+            try (ResultSet resultSet = statement2.executeQuery()) {
+                while (resultSet.next()) {
+                    return resultSet.getString("name");
+                }
+            }
+
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

@@ -29,9 +29,9 @@ public class FormManagerService implements IFormManagerService {
 
 
     @Override
-    public void createArtist(String name){
+    public void createArtist(String name) {
 
-        if(name.isBlank()){
+        if (name.isBlank()) {
             throw new IllegalArgumentException("Имя  артиста не введено");
         }
         if (artistsStorageDB.get().containsValue(name)) {
@@ -45,7 +45,7 @@ public class FormManagerService implements IFormManagerService {
     @Override
     public void createGenre(String name) {
 
-        if(name.isBlank()){
+        if (name.isBlank()) {
             throw new IllegalArgumentException("Имя жанра не введено");
         }
         if (genresStorageDB.get().containsValue(name)) {
@@ -53,6 +53,14 @@ public class FormManagerService implements IFormManagerService {
         }
 
         genresStorageDB.create(name);
+    }
+
+    @Override
+    public String deleteArtist(String id) {
+        if (id.isBlank()) {
+            throw new IllegalArgumentException("Артист не был выбран");
+        }
+        return artistsStorageDB.delete(Long.parseLong(id));
     }
 
     public ParticipantsDTO getParticipants() {

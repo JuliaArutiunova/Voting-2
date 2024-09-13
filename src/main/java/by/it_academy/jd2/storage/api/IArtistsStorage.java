@@ -14,4 +14,6 @@ public interface IArtistsStorage {
     Map<Long, String> get();
 
     String get(Long id);
+
+    String delete(Long id);
 }

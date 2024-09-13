@@ -52,6 +52,16 @@
         <url-pattern>/addGenre</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>DeleteArtistServlet</servlet-name>
+        <servlet-class>by.it_academy.jd2.controller.servlet.DeleteArtistServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>DeleteArtistServlet</servlet-name>
+        <url-pattern>/deleteArtist</url-pattern>
+    </servlet-mapping>
+
 
     <filter>
         <filter-name>EncodingFilter</filter-name>

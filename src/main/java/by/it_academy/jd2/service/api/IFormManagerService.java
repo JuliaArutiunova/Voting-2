@@ -11,4 +11,6 @@ public interface IFormManagerService {
     void createGenre(String name);
 
     ParticipantsDTO getParticipants();
+
+    String deleteArtist(String id);
 }
