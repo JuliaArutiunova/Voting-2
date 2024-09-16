@@ -8,8 +8,8 @@ import by.it_academy.jd2.storage.api.IGenresStorage;
 
 public class FormManagerService implements IFormManagerService {
 
-    private IArtistsStorage artistsStorageDB;
-    private IGenresStorage genresStorageDB;
+    private final IArtistsStorage artistsStorageDB;
+    private final IGenresStorage genresStorageDB;
 
 
     public FormManagerService(IArtistsStorage artistsStorageDB, IGenresStorage genresStorageDB) {
@@ -19,6 +19,9 @@ public class FormManagerService implements IFormManagerService {
 
     @Override
     public void create(FormCreateDTO dto) {
+        if(dto.getVotingName().isBlank()){
+            throw new IllegalArgumentException("Не введено имя для сохранения");
+        }
 
         if (dto.getNewArtists().size() < 2 || dto.getNewGenres().size() < 2) {
             throw new IllegalArgumentException("Выбрано менее двух участников");

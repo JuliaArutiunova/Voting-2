@@ -14,7 +14,6 @@ import java.sql.SQLException;
 public class VotingStorageDB implements IVotingStorage {
 
 
-
     private static final String INSERT_QUERY = """
             INSERT INTO app.vote(create_at, user_name, artist_id, about)
             	VALUES (?,?,?,?) RETURNING id;
@@ -24,17 +23,16 @@ public class VotingStorageDB implements IVotingStorage {
                 VALUES(?,?);""";
 
 
-
     public VotingStorageDB() {
     }
 
     @Override
     public Long create(VoteDTO voteDTO) {
-
-        long voteId = createVote(voteDTO);
-
+        long voteId;
         try (Connection connect = DBUtils.getConnection();
              PreparedStatement statement = connect.prepareStatement(INSERT_GENRE_QUERY)) {
+
+            voteId = createVote(voteDTO, connect);
 
             for (int i = 0; i < voteDTO.getGenres().length; i++) {
                 statement.setLong(1, voteId);
@@ -49,10 +47,9 @@ public class VotingStorageDB implements IVotingStorage {
     }
 
 
-    public Long createVote(VoteDTO voteDTO) {
+    public Long createVote(VoteDTO voteDTO, Connection connect) {
 
-        try (Connection connect = DBUtils.getConnection();
-             PreparedStatement statement = connect.prepareStatement(INSERT_QUERY)) {
+        try (PreparedStatement statement = connect.prepareStatement(INSERT_QUERY)) {
 
             statement.setObject(1, voteDTO.getCreateAt());
             statement.setString(2, voteDTO.getAuthor());
