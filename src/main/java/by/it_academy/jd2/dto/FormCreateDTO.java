@@ -1,16 +1,22 @@
 package by.it_academy.jd2.dto;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 
 public class FormCreateDTO {
 
+    private String votingName;
     private ArrayList<String> newArtists;
     private ArrayList<String> newGenres;
+    private LocalDateTime start;
 
-    private FormCreateDTO(ArrayList<String> newArtists, ArrayList<String> newGenres) {
+    private FormCreateDTO( String votingName, ArrayList<String> newArtists,
+                           ArrayList<String> newGenres, LocalDateTime start) {
+        this.votingName = votingName;
         this.newArtists = newArtists;
         this.newGenres = newGenres;
+        this.start = start;
     }
 
     public ArrayList<String> getNewArtists() {
@@ -21,6 +27,10 @@ public class FormCreateDTO {
         return newGenres;
     }
 
+    public String getVotingName() {
+        return votingName;
+    }
+
     public static FormCreateDTO.Builder builder() {
         return new Builder();
     }
@@ -29,16 +39,25 @@ public class FormCreateDTO {
     @Override
     public String toString() {
         return "FormCreateDTO{" +
-                "newArtists=" + newArtists +
+                "votingName='" + votingName + '\'' +
+                ", newArtists=" + newArtists +
                 ", newGenres=" + newGenres +
+                ", start=" + start +
                 '}';
     }
 
     public static class Builder {
+        private String votingName;
         private ArrayList<String> newArtists;
         private ArrayList<String> newGenres;
+        private LocalDateTime start;
 
         private Builder() {
+        }
+
+        public FormCreateDTO.Builder setVotingName(String votingName){
+            this.votingName = votingName;
+            return this;
         }
 
         public FormCreateDTO.Builder setNewArtists(ArrayList<String> newArtists) {
@@ -51,9 +70,18 @@ public class FormCreateDTO {
             return this;
         }
 
+        public FormCreateDTO.Builder setStart(LocalDateTime start){
+            this.start = start;
+            return this;
+        }
+
 
         public FormCreateDTO build() {
-            return new FormCreateDTO(this.newArtists, this.newGenres);
+            return new FormCreateDTO(
+                    this.votingName,
+                    this.newArtists,
+                    this.newGenres,
+                    this.start);
         }
     }
 }

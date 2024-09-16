@@ -17,6 +17,8 @@ pageEncoding="UTF-8"%>
 <p>В каждой категории должно быть минимум 2 участника</p>
 <br>
 <form action="create" method="POST">
+Введите имя голосования для сохранения:<br>
+        <input type="text" name="votingName" required/><br><br>
     <div id="artist-container">
         Создать артиста:  <button type="button" onclick="addFieldArtist()">+</button><br><br>
         <label for="artist">Artist:</label>
@@ -32,7 +34,6 @@ pageEncoding="UTF-8"%>
         <input type="text" name="genre"><br>
         <label for="genre">Genre:</label>
         <input type="text" name="genre"><br>
-
 
     </div>
 <br>

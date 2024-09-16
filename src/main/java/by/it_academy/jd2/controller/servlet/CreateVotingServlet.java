@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 
@@ -29,7 +30,7 @@ public class CreateVotingServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+        String votingName = req.getParameter("votingName");
         ArrayList<String> newArtists = getFilledInFields(req.getParameterValues("artist"));
         ArrayList<String> newGenres = getFilledInFields(req.getParameterValues("genre"));
 
@@ -38,8 +39,10 @@ public class CreateVotingServlet extends HttpServlet {
         if (!newArtists.isEmpty() && !newGenres.isEmpty()) {
             try {
                 formManagerService.create(FormCreateDTO.builder()
+                        .setVotingName(votingName)
                         .setNewArtists(newArtists)
                         .setNewGenres(newGenres)
+                        .setStart(LocalDateTime.now())
                         .build());
 
                 writer.write("<h3>Голосование успешно создано<h3>");
