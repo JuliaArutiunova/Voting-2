@@ -14,20 +14,18 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import static by.it_academy.jd2.util.FilePathUtil.*;
+
 public class VotingServlet extends HttpServlet {
+    private static final String ARTISTS_ATTRIBUTE_NAME = "artists";
+    private static final String GENRES_ATTRIBUTE_NAME = "genres";
 
-    public static final String USERNAME_PARAMETER = "firstname";
-    public static final String ARTIST_PARAMETER = "artist";
-    public static final String GENRE_PARAMETER = "genre";
-    public static final String COMMENT_PARAMETER = "txtpole";
+    private static final String USERNAME_PARAMETER = "firstname";
+    private static final String ARTIST_PARAMETER = "artist";
+    private static final String GENRE_PARAMETER = "genre";
+    private static final String COMMENT_PARAMETER = "txtpole";
+
     private final static String VOTED_HEADER_NAME = "voted";
-
-    private final static String VOTING_FORM_PATH = "/template/votingForm.jsp";
-    private final static String MESSAGE_PAGE_PATH = "/template/message.jsp";
-    private final static String ACCEPTED_PAGE_PATH = "/template/accepted.jsp";
-    private final static String ERROR_PAGE_PATH = "/template/voteError.jsp";
-
-    private final static String VOTED_MESSAGE = "Вы уже проголосовали";
 
 
     IArtistService artistService = ServiceFactory.getArtistService();
@@ -38,8 +36,9 @@ public class VotingServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-       req.setAttribute("artists", artistService.get());
-       req.setAttribute("genres", genreService.get());
+       req.setAttribute(ARTISTS_ATTRIBUTE_NAME, artistService.get());
+       req.setAttribute(GENRES_ATTRIBUTE_NAME, genreService.get());
+
        req.getRequestDispatcher(VOTING_FORM_PATH).forward(req, resp);
     }
 
@@ -51,8 +50,7 @@ public class VotingServlet extends HttpServlet {
             for (Cookie cookie : cookies) {
                 if (VOTED_HEADER_NAME.equalsIgnoreCase(cookie.getName())) {
                     resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                    req.setAttribute("message",VOTED_MESSAGE);
-                    req.getRequestDispatcher(MESSAGE_PAGE_PATH).forward(req,resp);
+                    resp.getWriter().write("Вы уже проголосовали");
                     return;
                 }
             }
