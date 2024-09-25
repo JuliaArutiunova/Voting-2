@@ -1,6 +1,7 @@
 package by.it_academy.jd2.controller.servlet;
 
 import by.it_academy.jd2.dto.InfoFromClientDTO;
+import by.it_academy.jd2.exception.VotingFormException;
 import by.it_academy.jd2.service.api.IArtistService;
 import by.it_academy.jd2.service.api.IGenreService;
 import by.it_academy.jd2.service.api.IVotingService;
@@ -10,6 +11,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.jsoup.helper.ValidationException;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -75,10 +77,8 @@ public class VotingServlet extends HttpServlet {
 
             req.setAttribute("name", userName);
             req.getRequestDispatcher(ACCEPTED_PAGE_PATH).forward(req, resp);
-
-        } catch (IllegalArgumentException e) {
-
-            req.setAttribute("errorMessage", e.getMessage());
+        } catch (VotingFormException e) {
+            req.setAttribute("errorMessages", e.getErrors());
             req.getRequestDispatcher(ERROR_PAGE_PATH).forward(req, resp);
         }
     }
