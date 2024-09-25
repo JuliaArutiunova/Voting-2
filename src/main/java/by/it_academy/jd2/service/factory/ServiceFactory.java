@@ -1,23 +1,36 @@
 package by.it_academy.jd2.service.factory;
 
-import by.it_academy.jd2.service.FormManagerService;
-import by.it_academy.jd2.service.VotingService;
+
+
+import by.it_academy.jd2.service.VoteService;
+import by.it_academy.jd2.service.api.IArtistService;
+import by.it_academy.jd2.service.api.IGenreService;
 import by.it_academy.jd2.storage.factory.StorageFactory;
+import by.it_academy.jd2.validation.VotingFormValidator;
 
 public class ServiceFactory {
-    private static final FormManagerService formManagerService = new FormManagerService(StorageFactory.getArtistsStorage(),
-            StorageFactory.getGenresStorage());
-    private static final VotingService votingService = new VotingService(StorageFactory.getVotingStorage(),
-            StorageFactory.getResultsStorage());
+
+    private static final IArtistService artistService = ArtistServiceFactory.getInstance();
+    private static final IGenreService genreService = GenreServiceFactory.getInstance();
+    private static final VoteService votingService = new VoteService(StorageFactory.getVotingStorage(),
+            new VotingFormValidator(artistService,genreService));
+
 
     private ServiceFactory() {
     }
 
-    public static FormManagerService getFormManagerService() {
-        return formManagerService;
-    }
 
-    public static VotingService getVotingService() {
+    public static VoteService getVotingService() {
         return votingService;
     }
+
+    public static IArtistService getArtistService() {
+        return artistService;
+    }
+
+    public static IGenreService getGenreService(){
+        return genreService;
+    }
+
+
 }
