@@ -1,5 +1,6 @@
-package by.it_academy.jd2.storage.db.utils;
+package by.it_academy.jd2.storage.db;
 
+import by.it_academy.jd2.storage.api.IConnectionManager;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 
 import javax.sql.DataSource;
@@ -8,9 +9,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 
-public class DBUtils {
+public class ConnectionManager implements IConnectionManager {
 
-    private static DataSource dataSource;
+    private static final DataSource dataSource;
 
     static {
 
@@ -31,12 +32,8 @@ public class DBUtils {
 
     }
 
-
-    public static Connection getConnection(){
-        try {
-            return dataSource.getConnection();
-        } catch (SQLException e) {
-            throw new RuntimeException("Ошибка подключения", e);
-        }
+    @Override
+    public Connection getConnection() throws SQLException {
+        return dataSource.getConnection();
     }
 }
