@@ -1,8 +1,8 @@
 package by.it_academy.jd2.controller.servlet;
 
 import by.it_academy.jd2.dto.InfoFromClientDTO;
-import by.it_academy.jd2.dto.ParticipantsDTO;
-import by.it_academy.jd2.service.api.IFormManagerService;
+import by.it_academy.jd2.service.api.IArtistService;
+import by.it_academy.jd2.service.api.IGenreService;
 import by.it_academy.jd2.service.api.IVotingService;
 import by.it_academy.jd2.service.factory.ServiceFactory;
 import jakarta.servlet.ServletException;
@@ -12,7 +12,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.io.Writer;
 import java.util.concurrent.TimeUnit;
 
 public class VotingServlet extends HttpServlet {
@@ -23,31 +22,37 @@ public class VotingServlet extends HttpServlet {
     public static final String COMMENT_PARAMETER = "txtpole";
     private final static String VOTED_HEADER_NAME = "voted";
 
-    IFormManagerService formManagerService = ServiceFactory.getFormManagerService();
+    private final static String VOTING_FORM_PATH = "/template/votingForm.jsp";
+    private final static String MESSAGE_PAGE_PATH = "/template/message.jsp";
+    private final static String ACCEPTED_PAGE_PATH = "/template/accepted.jsp";
+    private final static String ERROR_PAGE_PATH = "/template/voteError.jsp";
+
+    private final static String VOTED_MESSAGE = "Вы уже проголосовали";
+
+
+    IArtistService artistService = ServiceFactory.getArtistService();
+    IGenreService genreService = ServiceFactory.getGenreService();
     IVotingService votingService = ServiceFactory.getVotingService();
 
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        ParticipantsDTO participants = formManagerService.getParticipants();
-
-        req.setAttribute("artists", participants.getArtists());
-        req.setAttribute("genres", participants.getGenres());
-        req.getRequestDispatcher("/template/votingForm.jsp").forward(req, resp);
+       req.setAttribute("artists", artistService.get());
+       req.setAttribute("genres", genreService.get());
+       req.getRequestDispatcher(VOTING_FORM_PATH).forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        Writer writer = resp.getWriter();
-
         Cookie[] cookies = req.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (VOTED_HEADER_NAME.equalsIgnoreCase(cookie.getName())) {
-                    writer.write("<h3>Вы уже проголосовали</h3>");
                     resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    req.setAttribute("message",VOTED_MESSAGE);
+                    req.getRequestDispatcher(MESSAGE_PAGE_PATH).forward(req,resp);
                     return;
                 }
             }
@@ -57,9 +62,6 @@ public class VotingServlet extends HttpServlet {
         String artist = req.getParameter(ARTIST_PARAMETER);
         String[] genres = req.getParameterValues(GENRE_PARAMETER);
         String comment = req.getParameter(COMMENT_PARAMETER);
-
-        req.setAttribute("name", userName);
-
 
         try {
             votingService.create(InfoFromClientDTO.builder()
@@ -73,12 +75,13 @@ public class VotingServlet extends HttpServlet {
             votingCookie.setMaxAge(Math.toIntExact(TimeUnit.MINUTES.toSeconds(5)));
             resp.addCookie(votingCookie);
 
-            req.getRequestDispatcher("/template/accepted.jsp").forward(req, resp);
-
+            req.setAttribute("name", userName);
+            req.getRequestDispatcher(ACCEPTED_PAGE_PATH).forward(req, resp);
 
         } catch (IllegalArgumentException e) {
+
             req.setAttribute("errorMessage", e.getMessage());
-            req.getRequestDispatcher("/template/error.jsp").forward(req, resp);
+            req.getRequestDispatcher(ERROR_PAGE_PATH).forward(req, resp);
         }
     }
 }
