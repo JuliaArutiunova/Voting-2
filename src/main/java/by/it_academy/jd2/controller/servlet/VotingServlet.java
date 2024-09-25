@@ -4,14 +4,13 @@ import by.it_academy.jd2.dto.InfoFromClientDTO;
 import by.it_academy.jd2.exception.VotingFormException;
 import by.it_academy.jd2.service.api.IArtistService;
 import by.it_academy.jd2.service.api.IGenreService;
-import by.it_academy.jd2.service.api.IVotingService;
+import by.it_academy.jd2.service.api.IVoteService;
 import by.it_academy.jd2.service.factory.ServiceFactory;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.jsoup.helper.ValidationException;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -32,7 +31,7 @@ public class VotingServlet extends HttpServlet {
 
     IArtistService artistService = ServiceFactory.getArtistService();
     IGenreService genreService = ServiceFactory.getGenreService();
-    IVotingService votingService = ServiceFactory.getVotingService();
+    IVoteService votingService = ServiceFactory.getVotingService();
 
 
     @Override
