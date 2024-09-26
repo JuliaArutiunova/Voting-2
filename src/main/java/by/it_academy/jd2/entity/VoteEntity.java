@@ -8,6 +8,7 @@ public class VoteEntity {
     private LocalDateTime createAt;
     private Long artist;
     private Long[] genres;
+    private String about;
 
     private VoteEntity(VoteEntity copy) {
         this.id = copy.id;
@@ -15,6 +16,7 @@ public class VoteEntity {
         this.createAt = copy.createAt;
         this.artist = copy.artist;
         this.genres = copy.genres;
+        this.about = copy.about;
     }
 
     private VoteEntity() {
@@ -38,6 +40,10 @@ public class VoteEntity {
 
     public Long[] getGenres() {
         return genres;
+    }
+
+    public String getAbout() {
+        return about;
     }
 
     public static VoteEntity.Builder builder(){
@@ -73,6 +79,11 @@ public class VoteEntity {
 
         public VoteEntity.Builder setGenres (Long[] genres){
             this.instance.genres = genres;
+            return this;
+        }
+
+        public VoteEntity.Builder setAbout(String about){
+            this.instance.about = about;
             return this;
         }
 
