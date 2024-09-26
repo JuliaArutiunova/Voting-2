@@ -1,6 +1,7 @@
 package by.it_academy.jd2.service;
 
 import by.it_academy.jd2.dto.InfoFromClientDTO;
+import by.it_academy.jd2.dto.ResultsDTO;
 import by.it_academy.jd2.entity.VoteEntity;
 import by.it_academy.jd2.exception.VotingFormException;
 import by.it_academy.jd2.service.api.IVoteService;
@@ -36,6 +37,11 @@ public class VoteService implements IVoteService {
                 .setGenres(idToLong(infoFromClientDTO.getGenres()))
                 .setAbout(infoFromClientDTO.getComment())
                 .build());
+    }
+
+    @Override
+    public ResultsDTO getResults() {
+        return voteStorage.getVotingResult();
     }
 
 
