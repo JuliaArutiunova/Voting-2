@@ -35,7 +35,7 @@
 </table>
  <h3>Комментарии:</h3>
  <c:forEach items="${comments}" var="item">
-    <p>${item.getAuthor()} пишет:<br>${item.getText()}</p>
+    <p>${formatter.format(item.getDateTime())}<br>${item.getAuthor()} пишет: ${item.getText()}</p>
  </c:forEach>
 
 </body>
