@@ -1,13 +1,15 @@
 package by.it_academy.jd2.storage.db.factory;
 
-import by.it_academy.jd2.storage.db.VotingStorageDB;
+import by.it_academy.jd2.storage.db.ConnectionManager;
+import by.it_academy.jd2.storage.db.VoteStorageDB;
 
 public class VotingStorageFactory {
-    private static final VotingStorageDB instance = new VotingStorageDB();
+
+    private static final VoteStorageDB instance = new VoteStorageDB(ConnectionManagerFactory.getInstance());
 
     private VotingStorageFactory() {
     }
-    public static VotingStorageDB getInstance() {
+    public static VoteStorageDB getInstance() {
         return instance;
     }
 }

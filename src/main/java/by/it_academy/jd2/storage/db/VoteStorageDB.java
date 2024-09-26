@@ -1,20 +1,17 @@
 package by.it_academy.jd2.storage.db;
 
 
-import by.it_academy.jd2.dto.VoteDTO;
-import by.it_academy.jd2.storage.api.IVotingStorage;
-import by.it_academy.jd2.storage.db.utils.DBUtils;
+import by.it_academy.jd2.entity.VoteEntity;
+import by.it_academy.jd2.storage.api.IConnectionManager;
+import by.it_academy.jd2.storage.api.IVoteStorage;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 
-public class VotingStorageDB implements IVotingStorage {
+public class VoteStorageDB implements IVoteStorage {
 
 
-    private static final String INSERT_QUERY = """
+    private static final String INSERT_VOTE_QUERY = """
             INSERT INTO app.vote(create_at, user_name, artist_id, about)
             	VALUES (?,?,?,?) RETURNING id;
             """;
@@ -22,53 +19,52 @@ public class VotingStorageDB implements IVotingStorage {
             INSERT INTO app.cross_vote_genre(vote_id, genre_id)
                 VALUES(?,?);""";
 
+    private final IConnectionManager connectionManager;
 
-    public VotingStorageDB() {
+    public VoteStorageDB(IConnectionManager connectionManager) {
+        this.connectionManager = connectionManager;
     }
 
-    @Override
-    public Long create(VoteDTO voteDTO) {
-        long voteId;
-        try (Connection connect = DBUtils.getConnection();
-             PreparedStatement statement = connect.prepareStatement(INSERT_GENRE_QUERY)) {
+    public Long create(VoteEntity voteEntity) {
+        try (Connection connection = connectionManager.getConnection();
+             Statement statement = connection.createStatement()) {
 
-            voteId = createVote(voteDTO, connect);
+            connection.setAutoCommit(false);
+            statement.execute("BEGIN;");
 
-            for (int i = 0; i < voteDTO.getGenres().length; i++) {
-                statement.setLong(1, voteId);
-                statement.setLong(2, voteDTO.getGenres()[i]);
-                statement.executeUpdate();
-            }
+            try (PreparedStatement voteStatement = connection.prepareStatement(INSERT_VOTE_QUERY);
+                 PreparedStatement genreStatement = connection.prepareStatement(INSERT_GENRE_QUERY)) {
 
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return voteId;
-    }
+                voteStatement.setObject(1, voteEntity.getCreateAt());
+                voteStatement.setString(2, voteEntity.getAuthor());
+                voteStatement.setLong(3, voteEntity.getArtist());
+                voteStatement.setString(4, voteEntity.getAbout());
 
-
-    public Long createVote(VoteDTO voteDTO, Connection connect) {
-
-        try (PreparedStatement statement = connect.prepareStatement(INSERT_QUERY)) {
-
-            statement.setObject(1, voteDTO.getCreateAt());
-            statement.setString(2, voteDTO.getAuthor());
-            statement.setLong(3, voteDTO.getArtist());
-            statement.setString(4, voteDTO.getText());
-
-            try (ResultSet resultSet = statement.executeQuery();
-            ) {
-                while (resultSet.next()) {
-                    return resultSet.getLong(1);
+                Long voteId = null;
+                try (ResultSet resultSet = voteStatement.executeQuery()) {
+                    while (resultSet.next()) {
+                        voteId = resultSet.getLong("id");
+                    }
                 }
+                if (voteId == null) {
+                    throw new IllegalStateException("Ошибка получения id добавленного голоса");
+                }
+
+                for (int i = 0; i < voteEntity.getGenres().length; i++) {
+                    genreStatement.setLong(1, voteId);
+                    genreStatement.setLong(2, voteEntity.getGenres()[i]);
+                    genreStatement.executeUpdate();
+                    genreStatement.clearParameters();
+                }
+                statement.execute("COMMIT;");
+            } catch (SQLException e) {
+                throw new RuntimeException("Ошибка добавления голоса");
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException();
         }
-
         return null;
     }
-
 
 }
