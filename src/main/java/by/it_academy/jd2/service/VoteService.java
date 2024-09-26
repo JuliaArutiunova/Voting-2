@@ -34,6 +34,7 @@ public class VoteService implements IVoteService {
                 .setAuthor(infoFromClientDTO.getName())
                 .setArtist(Long.valueOf(infoFromClientDTO.getArtist()))
                 .setGenres(idToLong(infoFromClientDTO.getGenres()))
+                .setAbout(infoFromClientDTO.getComment())
                 .build());
     }
 
