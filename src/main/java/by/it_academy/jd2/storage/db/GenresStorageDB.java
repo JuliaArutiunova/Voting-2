@@ -1,10 +1,9 @@
 package by.it_academy.jd2.storage.db;
 
+import by.it_academy.jd2.storage.api.IConnectionManager;
 import by.it_academy.jd2.storage.api.IGenresStorage;
-import by.it_academy.jd2.storage.db.utils.DBUtils;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,19 +18,27 @@ public class GenresStorageDB implements IGenresStorage {
             SELECT name
             	FROM app.genre WHERE id = ?;""";
 
+    private static final String SELECT_BY_NAME_QUERY = """
+            SELECT id
+            	FROM app.genre WHERE name = ?;""";
+
     private static final String SELECT_ALL_QUERY = """
             SELECT id, name FROM app.genre""";
 
-    private static final String DELETE_GENRE_FROM_VOTE = "DELETE FROM app.cross_vote_genre WHERE genre_id = ?;";
 
-    private static final String DELETE_GENRE = "DELETE FROM app.genre WHERE id = ? RETURNING name;";
+    private static final String DELETE_GENRE_QUERY = """
+            DELETE FROM app.genre WHERE id = ?;""";
 
-    public GenresStorageDB() {
+
+    private final IConnectionManager connectionManager;
+
+    public GenresStorageDB(IConnectionManager connectionManager) {
+        this.connectionManager = connectionManager;
     }
 
     @Override
     public Long create(String genre) {
-        try (Connection connect = DBUtils.getConnection();
+        try (Connection connect = connectionManager.getConnection();
              PreparedStatement statement = connect.prepareStatement(INSERT_QUERY)) {
 
             statement.setString(1, genre);
@@ -48,38 +55,16 @@ public class GenresStorageDB implements IGenresStorage {
         return null;
     }
 
-    @Override
-    public Long[] create(ArrayList<String> genresList) {
-        Long[] ids = new Long[genresList.size()];
 
-        try (Connection connect = DBUtils.getConnection();
-             PreparedStatement statement = connect.prepareStatement(INSERT_QUERY)) {
-
-
-            for (int i = 0; i < genresList.size(); i++) {
-                statement.setString(1, genresList.get(i));
-
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    while (resultSet.next()) {
-                        ids[i] = resultSet.getLong(1);
-                    }
-                }
-            }
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-        return ids;
-    }
 
     @Override
     public String get(Long id) {
 
-        try (Connection connect = DBUtils.getConnection();
+        try (Connection connect = connectionManager.getConnection();
              PreparedStatement statement = connect.prepareStatement(SELECT_BY_ID_QUERY);) {
 
             statement.setLong(1, id);
+
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
                     return resultSet.getString("name");
@@ -93,8 +78,26 @@ public class GenresStorageDB implements IGenresStorage {
     }
 
     @Override
+    public Long getByName(String name) {
+        try (Connection connect = connectionManager.getConnection();
+             PreparedStatement statement = connect.prepareStatement(SELECT_BY_NAME_QUERY)) {
+
+            statement.setString(1, name);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    return resultSet.getLong("id");
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return null;
+    }
+
+    @Override
     public Map<Long, String> get() {
-        try (Connection connect = DBUtils.getConnection();
+        try (Connection connect = connectionManager.getConnection();
              Statement statement = connect.createStatement();
              ResultSet resultSet = statement.executeQuery(SELECT_ALL_QUERY)) {
             Map<Long, String> result = new HashMap<>();
@@ -108,27 +111,17 @@ public class GenresStorageDB implements IGenresStorage {
     }
 
     @Override
-    public String delete(Long id) {
-        try (Connection connect = DBUtils.getConnection();
-             PreparedStatement statement1 = connect.prepareStatement(DELETE_GENRE_FROM_VOTE);
-             PreparedStatement statement2 = connect.prepareStatement(DELETE_GENRE)) {
+    public void delete(Long id) {
+        try (Connection connection = connectionManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_GENRE_QUERY)) {
 
-            statement1.setLong(1, id);
-            statement1.executeUpdate();
-            statement2.setLong(1,id);
-
-            try (ResultSet resultSet = statement2.executeQuery()) {
-                while (resultSet.next()) {
-                    return resultSet.getString("name");
-                }
-            }
-
+            preparedStatement.setLong(1, id);
+            preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Ошибка при удалении");
         }
-
-        return null;
     }
+
 
 }
