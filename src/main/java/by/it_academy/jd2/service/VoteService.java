@@ -44,6 +44,14 @@ public class VoteService implements IVoteService {
         return voteStorage.getVotingResult();
     }
 
+    public int getArtistResult(){
+        return 0;
+    }
+
+    public int getGenreResult(){
+        return 1;
+    }
+
 
     private Long[] idToLong(String[] stringIds) {
         int arrayLength = stringIds.length;

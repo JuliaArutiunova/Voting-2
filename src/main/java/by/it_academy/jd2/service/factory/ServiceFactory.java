@@ -9,11 +9,10 @@ import by.it_academy.jd2.storage.factory.StorageFactory;
 import by.it_academy.jd2.validation.VotingFormValidator;
 
 public class ServiceFactory {
-
+//TODO
     private static final IArtistService artistService = ArtistServiceFactory.getInstance();
     private static final IGenreService genreService = GenreServiceFactory.getInstance();
-    private static final VoteService votingService = new VoteService(StorageFactory.getVotingStorage(),
-            new VotingFormValidator(artistService,genreService));
+    private static final VoteService votingService = VoteServiceFactory.getInstance();
 
 
     private ServiceFactory() {
