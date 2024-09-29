@@ -3,17 +3,17 @@ package by.it_academy.jd2.validation;
 import by.it_academy.jd2.dto.InfoFromClientDTO;
 import by.it_academy.jd2.service.api.IArtistService;
 import by.it_academy.jd2.service.api.IGenreService;
-import by.it_academy.jd2.validation.api.IVotingFormValidation;
+import by.it_academy.jd2.validation.api.IVotingFormValidator;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class VotingFormValidator implements IVotingFormValidation {
+public class VotingFormValidator implements IVotingFormValidator {
     private int minGenresNumber = 3;
     private int maxGenresNumber = 5;
 
-    private IArtistService artistService;
-    private IGenreService genreService;
+    private final IArtistService artistService;
+    private final IGenreService genreService;
 
     private List<Throwable> errors;
 
