@@ -6,7 +6,7 @@ import by.it_academy.jd2.dto.ResultsDTO;
 public interface IVoteService {
     void create(InfoFromClientDTO infoFromClientDTO);
     ResultsDTO getResults();
-    int getArtistResult();
-    int getGenreResult();
+    int getArtistResult(Long id);
+    int getGenreResult(Long id);
 
 }

@@ -6,7 +6,7 @@ import by.it_academy.jd2.entity.VoteEntity;
 import by.it_academy.jd2.exception.VotingFormException;
 import by.it_academy.jd2.service.api.IVoteService;
 import by.it_academy.jd2.storage.api.IVoteStorage;
-import by.it_academy.jd2.validation.VotingFormValidator;
+import by.it_academy.jd2.validation.api.IVotingFormValidator;
 
 
 import java.time.LocalDateTime;
@@ -14,10 +14,10 @@ import java.time.LocalDateTime;
 public class VoteService implements IVoteService {
 
 
-    private final IVoteStorage voteStorage;
-    private final VotingFormValidator validator;
+    private IVoteStorage voteStorage;
+    private IVotingFormValidator validator;
 
-    public VoteService(IVoteStorage voteStorage, VotingFormValidator validator) {
+    public VoteService(IVoteStorage voteStorage,IVotingFormValidator validator) {
         this.voteStorage = voteStorage;
         this.validator = validator;
     }
@@ -44,12 +44,12 @@ public class VoteService implements IVoteService {
         return voteStorage.getVotingResult();
     }
 
-    public int getArtistResult(){
-        return 0;
+    public int getArtistResult(Long id) {
+        return voteStorage.getArtistResult(id);
     }
 
-    public int getGenreResult(){
-        return 1;
+    public int getGenreResult(Long id) {
+        return voteStorage.getGenreResult(id);
     }
 
 
@@ -63,6 +63,5 @@ public class VoteService implements IVoteService {
         }
         return ids;
     }
-
 
 }

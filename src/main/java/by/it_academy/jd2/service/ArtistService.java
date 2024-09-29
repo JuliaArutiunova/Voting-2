@@ -42,7 +42,7 @@ public class ArtistService implements IArtistService {
         String artistName = get(id);
         if (artistName == null) {
             throw new IllegalArgumentException("Такого артиста не существует");
-        } else if (voteService.getArtistResult() != 0) {
+        } else if (voteService.getArtistResult(id) != 0) {
             throw new DeleteParticipantException();
         }
         artistsStorage.delete(id);

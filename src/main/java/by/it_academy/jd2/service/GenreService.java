@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class GenreService implements IGenreService {
 
-    IGenresStorage genresStorage;
+    private final IGenresStorage genresStorage;
     private final IVoteService voteService;
 
     public GenreService(IGenresStorage genresStorage, IVoteService voteService) {
@@ -31,7 +31,7 @@ public class GenreService implements IGenreService {
         return genresStorage.get();
     }
 
-    public String get(Long id){
+    public String get(Long id) {
         return genresStorage.get(id);
     }
 
@@ -40,7 +40,7 @@ public class GenreService implements IGenreService {
         String genreName = get(id);
         if (genreName == null) {
             throw new IllegalArgumentException("Такого жанра не существует");
-        } else if (voteService.getGenreResult() != 0) {
+        } else if (voteService.getGenreResult(id) != 0) {
             throw new DeleteParticipantException();
         }
         genresStorage.delete(id);
