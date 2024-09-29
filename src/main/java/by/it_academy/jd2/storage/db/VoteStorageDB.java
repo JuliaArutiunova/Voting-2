@@ -31,11 +31,20 @@ public class VoteStorageDB implements IVoteStorage {
             FROM app.artist
             LEFT JOIN app.vote ON app.vote.artist_id = app.artist.id
             GROUP BY name ORDER BY votes DESC;""";
+
+    private static final String SELECT_ARTIST_RESULT = """
+            SELECT count(artist_id) AS votes
+            	FROM app.vote WHERE artist_id = ?;""";
+
     private static final String SELECT_GENRES_RESULT = """ 
             SELECT name, count(genre_id) AS votes
             FROM app.genre
             LEFT JOIN app.cross_vote_genre ON app.genre.id = app.cross_vote_genre.genre_id
             GROUP BY name ORDER BY votes DESC;""";
+
+    private static final String SELECT_GENRE_RESULT = """
+            SELECT count(genre_id) AS votes
+            	FROM app.cross_vote_genre WHERE genre_id = ?;""";
     private static final String SELECT_COMMENTS = """
             SELECT  create_at, user_name, about
             	FROM app.vote;""";
@@ -114,6 +123,46 @@ public class VoteStorageDB implements IVoteStorage {
 
         return results;
     }
+
+    public int getArtistResult(Long id) {
+
+        try (Connection connect = connectionManager.getConnection()) {
+            PreparedStatement statement = connect.prepareStatement(SELECT_ARTIST_RESULT);
+
+            statement.setLong(1, id);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    return resultSet.getInt("votes");
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Ошибка получения результата артиста");
+        }
+        return 0;
+    }
+
+    public int getGenreResult(Long id){
+
+        try (Connection connect = connectionManager.getConnection()) {
+            PreparedStatement statement = connect.prepareStatement(SELECT_GENRE_RESULT);
+
+            statement.setLong(1, id);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    return resultSet.getInt("votes");
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Ошибка получения результата артиста");
+        }
+        return 0;
+    }
+
+
 
     public List<Comment> getComments() {
         List<Comment> comments = new ArrayList<>();

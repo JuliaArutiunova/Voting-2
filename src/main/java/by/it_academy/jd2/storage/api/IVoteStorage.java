@@ -10,4 +10,8 @@ public interface IVoteStorage {
 
     ResultsDTO getVotingResult();
 
+    int getArtistResult(Long id);
+
+    int getGenreResult(Long id);
+
 }
