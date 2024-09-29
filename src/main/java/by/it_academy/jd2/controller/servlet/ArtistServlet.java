@@ -2,7 +2,7 @@ package by.it_academy.jd2.controller.servlet;
 
 import by.it_academy.jd2.exception.DeleteParticipantException;
 import by.it_academy.jd2.service.api.IArtistService;
-import by.it_academy.jd2.service.factory.ServiceFactory;
+import by.it_academy.jd2.service.factory.ArtistServiceFactory;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,7 +15,7 @@ import static by.it_academy.jd2.util.FilePathUtil.ARTIST_JSP_PATH;
 
 public class ArtistServlet extends HttpServlet {
 
-    private final IArtistService artistService = ServiceFactory.getArtistService();
+    private final IArtistService artistService = ArtistServiceFactory.getInstance();
 
 
     @Override

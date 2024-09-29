@@ -5,7 +5,9 @@ import by.it_academy.jd2.exception.VotingFormException;
 import by.it_academy.jd2.service.api.IArtistService;
 import by.it_academy.jd2.service.api.IGenreService;
 import by.it_academy.jd2.service.api.IVoteService;
-import by.it_academy.jd2.service.factory.ServiceFactory;
+import by.it_academy.jd2.service.factory.ArtistServiceFactory;
+import by.it_academy.jd2.service.factory.GenreServiceFactory;
+import by.it_academy.jd2.service.factory.VoteServiceFactory;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
@@ -29,9 +31,9 @@ public class VotingServlet extends HttpServlet {
     private final static String VOTED_HEADER_NAME = "voted";
 
 
-    IArtistService artistService = ServiceFactory.getArtistService();
-    IGenreService genreService = ServiceFactory.getGenreService();
-    IVoteService votingService = ServiceFactory.getVotingService();
+    IArtistService artistService = ArtistServiceFactory.getInstance();
+    IGenreService genreService = GenreServiceFactory.getInstance();
+    IVoteService votingService = VoteServiceFactory.getInstance();
 
 
     @Override

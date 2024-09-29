@@ -2,7 +2,7 @@ package by.it_academy.jd2.controller.servlet;
 
 import by.it_academy.jd2.exception.DeleteParticipantException;
 import by.it_academy.jd2.service.api.IGenreService;
-import by.it_academy.jd2.service.factory.ServiceFactory;
+import by.it_academy.jd2.service.factory.GenreServiceFactory;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,7 +14,7 @@ import java.util.Map;
 import static by.it_academy.jd2.util.FilePathUtil.GENRE_JSP_PATH;
 public class GenreServlet extends HttpServlet {
 
-    private final IGenreService genreService = ServiceFactory.getGenreService();
+    private final IGenreService genreService = GenreServiceFactory.getInstance();
 
 
     @Override

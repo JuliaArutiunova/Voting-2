@@ -3,7 +3,7 @@ package by.it_academy.jd2.controller.servlet;
 
 import by.it_academy.jd2.dto.ResultsDTO;
 import by.it_academy.jd2.service.api.IVoteService;
-import by.it_academy.jd2.service.factory.ServiceFactory;
+import by.it_academy.jd2.service.factory.VoteServiceFactory;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,7 +16,7 @@ import java.util.Locale;
 import static by.it_academy.jd2.util.FilePathUtil.RESULTS_JSP_PATH;
 public class ResultServlet extends HttpServlet {
 
-    IVoteService votingService = ServiceFactory.getVotingService();
+    IVoteService votingService = VoteServiceFactory.getInstance();
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLL yyyy, HH:mm").withLocale(Locale.forLanguageTag("ru"));
 
     @Override
